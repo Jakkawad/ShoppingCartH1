@@ -18,7 +18,20 @@ class Page1OptionViewController: UIViewController {
     }
     
     func openDB() {
-        
+        let documentFolder = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let path = documentFolder.stringByAppendingString("")
+        print("DB Path \(path)")
+        let fileManager = NSFileManager()
+        if (!fileManager.fileExistsAtPath(path)) {
+            let dbFilePath = NSBundle.mainBundle().pathForResource("data", ofType: "db")!
+            do {
+                try fileManager.copyItemAtPath(dbFilePath, toPath: path)
+            } catch {
+                print("Error to open DB")
+            }
+        }
+        self.database = FMDatabase(path: path)
+        self.database.open()
     }
     
     func query() {
